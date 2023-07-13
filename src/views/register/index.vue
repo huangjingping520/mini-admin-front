@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
 
+import { useRouter } from 'vue-router'
 import { registerReq } from '@/api/user'
+
+import { elMessage } from '@/hooks/useElement'
 
 const loginForm = reactive({
   name: '',
@@ -69,10 +72,25 @@ function showPwd() {
   })
 }
 
+function resetRegisterForm() {
+  loginForm.name = ''
+  loginForm.password = ''
+  loginForm.phone = ''
+  loginForm.email = ''
+}
+
+const router = useRouter()
+const errCode = '500'
 function handleRegister() {
-  console.log(loginForm)
-  registerReq(loginForm).then((res) => {
-    console.log(res)
+  registerReq(loginForm).then(({ data }) => {
+    if (errCode.includes(data.code)) {
+      elMessage(data.msg, 'error')
+      resetRegisterForm()
+    }
+    else {
+      elMessage('注册成功', 'success')
+      router.push('/')
+    }
   })
 }
 

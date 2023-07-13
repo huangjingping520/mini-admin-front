@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { loginReq } from '@/api/user'
+import { elMessage } from '@/hooks/useElement'
+import { useStore } from '@/store/index'
 
 const loginForm = reactive({
   phone: '',
@@ -20,10 +23,22 @@ function showPwd() {
   })
 }
 
+const router = useRouter()
+const basicStore = useStore()
+
 function handleLogin() {
-  console.log(loginForm)
-  loginReq(loginForm).then((res) => {
-    console.log(res)
+  loginReq(loginForm).then(({ data }) => {
+    const { code, msg } = data
+    const errCode = '500'
+    console.log(!code, msg, msg.token)
+    if (errCode.includes(code)) {
+      elMessage(msg, 'error')
+    }
+    else {
+      elMessage('登录成功', 'success')
+      basicStore.setToken(`Bearer ${msg.token}`)
+      router.push('/home')
+    }
   })
 }
 

@@ -7,6 +7,22 @@ const queryParams = reactive({
   keywords: '',
   status: '',
 })
+
+const value = ref('')
+const options = [
+  {
+    value: '上新推荐',
+    label: '上新推荐',
+  },
+  {
+    value: '热门产品',
+    label: '热门产品',
+  },
+  {
+    value: '品牌推广',
+    label: '品牌推广',
+  },
+]
 </script>
 
 <template>
@@ -22,10 +38,8 @@ const queryParams = reactive({
           <el-input v-model="queryParams.keywords" placeholder="输入搜索关键字" clearable style="width: 200px;" />
         </el-form-item>
         <el-form-item prop="status">
-          <el-select v-model="queryParams.status" placeholder="分类名称" clearable style="width: 200px;">
-            <el-option label="上新推荐" />
-            <el-option label="热门产品" />
-            <el-option label="品牌推广" />
+          <el-select v-model="value" placeholder="分类名称" style="width: 200px;">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -64,7 +78,7 @@ const queryParams = reactive({
 }
 .search-container {
   margin-bottom: 10px;
-  background-color: rgb(182, 179, 179);
+  background-color: rgb(182, 179, 179,0.9);
   border: 1px solid black;
   border-radius: 4px;
   box-shadow: var(--el-box-shadow-light);

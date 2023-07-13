@@ -1,5 +1,18 @@
-import { createPinia } from 'pinia'
+import { defineStore } from 'pinia'
 
-const store = createPinia()
-
-export default store
+export const useStore = defineStore('main', {
+  state: () => {
+    return {
+      token: '',
+    }
+  },
+  persist: {
+    storage: localStorage,
+    paths: ['token'],
+  },
+  actions: {
+    setToken(data: any) {
+      this.token = data
+    },
+  },
+})

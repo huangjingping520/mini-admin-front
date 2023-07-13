@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
+import { loginReq } from '@/api/user'
 
 const loginForm = reactive({
-  name: '',
+  phone: '',
   password: '',
-  rememberMe: true,
 })
 
 const passwordType = ref('password')
@@ -21,11 +21,31 @@ function showPwd() {
 }
 
 function handleLogin() {
-
+  console.log(loginForm)
+  loginReq(loginForm).then((res) => {
+    console.log(res)
+  })
 }
 
 const loading = ref(false)
 const register = ref(true)
+
+const rules = {
+  phone: [
+    {
+      required: true,
+      message: '必须填写手机号',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '必须填写密码',
+      trigger: 'blur',
+    },
+  ],
+}
 </script>
 
 <template>
@@ -36,17 +56,17 @@ const register = ref(true)
     <div class="login-pane">
       <img src="@/assets/layout/login-top.svg" class="login-top">
       <img src="@/assets/layout/login-front.svg" class="login-front">
-      <el-form class="login-form">
+      <el-form class="login-form" :rules="rules" :model="loginForm">
         <div class="title-container">
           <h3 class="title text-center">
             Mini Admin
           </h3>
         </div>
-        <el-form-item prop="name">
+        <el-form-item prop="phone">
           <span class="svg-container">
-            <el-icon :size="16"><User /></el-icon>
+            <el-icon :size="16"><Iphone /></el-icon>
           </span>
-          <el-input v-model="loginForm.name" placeholder="name" />
+          <el-input v-model="loginForm.phone" placeholder="phone" />
           <!-- 占位 -->
         </el-form-item>
         <el-form-item prop="password">
@@ -66,14 +86,6 @@ const register = ref(true)
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-checkbox
-          v-model="loginForm.rememberMe"
-          style="margin: 0px 0px 25px 0px"
-          true-label="true"
-          false-label="false"
-        >
-          记住密码
-        </el-checkbox>
         <el-form-item style="width: 100%">
           <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
             <span v-if="!loading">登 录</span>
@@ -81,7 +93,9 @@ const register = ref(true)
           </el-button>
         </el-form-item>
         <div v-if="register" style="float: right">
-          <router-link class="link-type" to="/register">立即注册</router-link>
+          <router-link class="link-type" to="/register">
+            立即注册
+          </router-link>
         </div>
       </el-form>
     </div>

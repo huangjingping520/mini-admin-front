@@ -1,12 +1,60 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
 
+import { registerReq } from '@/api/user'
+
 const loginForm = reactive({
   name: '',
   password: '',
   phone: '',
   email: '',
 })
+
+const rules = {
+  phone: [
+    {
+      required: true,
+      message: '必须填写手机号',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^(?:(?:\+|00)86)?1[3-9]\d{9}$/,
+      message: '请输入正确的手机号',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '必须填写密码',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-=_+{};':"\\|,.<>/?]).{10,20}$/,
+      message: '密码需要10-20位，必须包含大写小写字母、数字、特殊符号四种',
+      trigger: 'blur',
+    },
+  ],
+  name: [
+    {
+      required: true,
+      message: '必须填写用户名',
+      trigger: 'blur',
+    },
+  ],
+  email: [
+    {
+      required: true,
+      message: '必须填写邮箱',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^[A-Za-z0-9\u4E00-\u9FA5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+      message: '请输入正确的邮箱',
+      trigger: 'blur',
+    },
+  ],
+}
 
 const passwordType = ref('password')
 const refPassword = ref()
@@ -22,7 +70,10 @@ function showPwd() {
 }
 
 function handleRegister() {
-
+  console.log(loginForm)
+  registerReq(loginForm).then((res) => {
+    console.log(res)
+  })
 }
 
 const loading = ref(false)
@@ -37,7 +88,7 @@ const register = ref(true)
     <div class="login-pane">
       <img src="@/assets/layout/login-top.svg" class="login-top">
       <img src="@/assets/layout/login-front.svg" class="login-front">
-      <el-form class="login-form">
+      <el-form class="login-form" :rules="rules" :model="loginForm">
         <div class="title-container">
           <h3 class="title text-center">
             Mini Admin
@@ -81,7 +132,7 @@ const register = ref(true)
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-form-item style="width: 100%">
+        <el-form-item style="width: 100%;">
           <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleRegister">
             <span v-if="!loading">注 册</span>
             <span v-else>注 册 中...</span>

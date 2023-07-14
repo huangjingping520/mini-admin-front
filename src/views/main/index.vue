@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import GoodsTable from './goodsTable.vue'
 
 const queryFormRef = ref(ElForm)
+
+const childRef = ref<any>()
 
 const queryParams = reactive({
   keywords: '',
@@ -67,7 +70,7 @@ const options = [
       </el-form>
     </div>
     <div class="pt-2 pr-4 pl-4">
-      aaa
+      <GoodsTable ref="childRef" />
     </div>
   </div>
 </template>

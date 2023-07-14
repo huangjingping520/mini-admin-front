@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import Main from '@/views/main/index.vue'
+
+// import Main from '@/views/main/index.vue'
 import DashBoard from '@/views/dashboard/index.vue'
 
 // 配置路由信息
@@ -19,7 +20,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'main',
         name: 'Main',
-        component: Main,
+        component: () => import('@/views/main/index.vue'),
       },
       {
         path: 'dashboard',
